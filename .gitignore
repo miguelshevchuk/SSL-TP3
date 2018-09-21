@@ -30,3 +30,13 @@
 
 # Debug files
 *.dSYM/
+
+\.metadata/
+
+TP3-SSL/\.settings/
+
+RemoteSystemsTempFiles/
+
+TP3-SSL/\.cproject
+
+TP3-SSL/\.project
