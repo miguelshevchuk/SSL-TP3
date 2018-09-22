@@ -42,3 +42,13 @@ TP3-SSL/\.cproject
 TP3-SSL/\.project
 
 TP3-SSL/Debug/
+
+TP3-SSL/src/scanner
+
+\.DS_Store
+
+TP3-SSL/src/scanner\.c
+
+TP3-SSL/src/scanner\.h
+
+TP3-SSL/src/compilar\.sh
