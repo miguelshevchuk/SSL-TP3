@@ -13,10 +13,15 @@
 #include "tokens.h"
 #include "scanner.h"
 
-char *token_names[] = {"ERROR_CONSTANTE", "ERROR_COMUN", "ERROR_IDENTIFICADOR", "PROGRAMA", "FIN", "VARIABLES", "CODIGO", "DEFINIR", "LEER", "ESCRIBIR", "CONSTANTE", "IDENTIFICADOR", "OPERADOR", "CARACTER_PUNTUACION", "ASIGNACION"};
+char *token_names[] = {"Fin de Archivo","Programa", "Fin", "Variables", "Codigo", "Definir", "Leer", "Escribir", "CONSTANTE", "IDENTIFICADOR", "OPERADOR", "CARACTER_PUNTUACION", "ASIGNACION"};
 int main() {
 	enum token t;
-	while ((t = yylex()) != EOF)
-		printf("Token: %s\t\tValor: %s\n", token_names[t], yytext);
+	while (t = yylex()){
+		if(t == CONSTANTE || t == IDENTIFICADOR){
+			printf("Token: %s\t\tLexema: %s\n", token_names[t], yytext);
+		}else{
+			printf("Token: '%s'\n", yytext);
+		}
+	}
 	return 0;
 }

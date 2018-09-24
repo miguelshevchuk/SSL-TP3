@@ -21,23 +21,23 @@ comentario			\/\/.*
 
 
 %%
-{comentario}									;
-programa									return PROGRAMA;
-fin										return FIN;
-variables								return VARIABLES;
-codigo									return CODIGO;
-definir									return DEFINIR;
-leer										return LEER;
-escribir									return ESCRIBIR;
-{digito}+								return CONSTANTE;
-{identif}								return IDENTIFICADOR;
-{operador}								return OPERADOR;
-{caracterPuntuacion}						return CARACTER_PUNTUACION;
-{asignacion}								return ASIGNACION;
-<<EOF>>									return EOF;
-{digito}+{letra}+[[:alnum:]]*				return ERROR_CONSTANTE;
-{identif}{otros}+(({letra}|{digito})*{otros}*)*		return ERROR_IDENTIFICADOR;
-{otros}+									return ERROR_COMUN;
+{comentario}											;
+[[:space:]]											;
+programa												return PROGRAMA;
+fin													return FIN;
+variables											return VARIABLES;
+codigo												return CODIGO;
+definir												return DEFINIR;
+leer													return LEER;
+escribir												return ESCRIBIR;
+{digito}+											return CONSTANTE;
+{identif}											return IDENTIFICADOR;
+{operador}											return OPERADOR;
+{caracterPuntuacion}									return CARACTER_PUNTUACION;
+{asignacion}											return ASIGNACION;
+{digito}+{letra}+[[:alnum:]]*							{printf("Error Lexico: %s: %s\n", "Constante Invalida", yytext);}
+{identif}{otros}+(({letra}|{digito})*{otros}*)*		{printf("Error Lexico: %s: %s\n", "Identificador Invalido", yytext);}
+{otros}+												{printf("Error Lexico: %s: %s\n", "Cadena desconocida", yytext);}
 
 %%
 
