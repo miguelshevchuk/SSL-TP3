@@ -1,12 +1,12 @@
 /*
- ============================================================================
- Name        : TP3-SSL.c
- Author      : 
- Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
- ============================================================================
- */
+    TP3 - 2018
+    Grupo: 07
+    Integrantes:
+    - Aruquipa Mamani, Jhoselyn Sandra - 160.867-8
+    - Yamada, Demian - 152.711-3
+    - Ramirez, Jeremias - 141.941-9
+    - Shevchuk Calo, Miguel Omar - 152.603-0
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
