@@ -13,9 +13,15 @@
 digito				[[:digit:]]
 letra				[[:alpha:]]
 asignacion			\<\-
-operador				[+]|[-]|[*]|[/]
-caracterPuntuacion	\(|\)|\.|\,
-otros				[#]|[@]|[<]
+suma					\+
+resta				\-
+multiplicacion		\*
+division				\/
+parentesisAbre		\(
+parentesisCierra		\)
+punto				\.
+coma					\,
+otros				[^[:space:][:digit:][:alpha:]+\-*/().,\n]
 identif				{letra}({letra}|{digito})*
 comentario			\/\/.*
 
@@ -32,10 +38,16 @@ leer													return LEER;
 escribir												return ESCRIBIR;
 {digito}+											return CONSTANTE;
 {identif}											return IDENTIFICADOR;
-{operador}											return OPERADOR;
-{caracterPuntuacion}									return CARACTER_PUNTUACION;
 {asignacion}											return ASIGNACION;
-{digito}+{letra}+[[:alnum:]]*							{printf("Error Lexico: %s: %s\n", "Constante Invalida", yytext);}
+{suma}												return SUMA;
+{resta}												return RESTA;
+{multiplicacion}										return MULTIPLICACION;
+{division}											return DIVISION;
+{parentesisAbre}										return PARENTESISABRE;
+{parentesisCierra}									return PARENTESISCIERRA;
+{punto}												return PUNTO;
+{coma}												return COMA;
+{digito}+{letra}+[[:alnum:]]*						{printf("Error Lexico: %s: %s\n", "Constante Invalida", yytext);}
 {identif}{otros}+(({letra}|{digito})*{otros}*)*		{printf("Error Lexico: %s: %s\n", "Identificador Invalido", yytext);}
 {otros}+												{printf("Error Lexico: %s: %s\n", "Cadena desconocida", yytext);}
 
