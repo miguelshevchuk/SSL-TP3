@@ -10,25 +10,28 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "tokens.h"
 #include "scanner.h"
+#include "parser.h"
 
 char *token_names[] = {"Fin de Archivo","Programa", "Fin", "Variables", "Codigo", "Definir", "Leer", "Escribir", "Constante", "Identificador", "Asignacion", "Suma", "Resta", "Multiplicacion", "Division", "Parentesis_abre", "Parentesis_cierra", "Punto", "Coma"};
+
+
 int main() {
-	enum token t;
-	while (t = yylex()){
-		if(t == CONSTANTE || t == IDENTIFICADOR){
-			printf("Token: %s\t\tLexema: %s\n", token_names[t], yytext);
-		}else if(esCaracter(t)){
-			printf("Token: '%c'\n", yytext[0]);
-		}else{
-			printf("Token: %s\n", token_names[t]);
-		}
-
+	int resultado = yyparse();
+	switch( resultado ){
+	case 0:
+		puts("Compilación terminada con Éxito");
+		break;
+	case 1:
+		puts("Errores de compilacion");
+		break;
+	case 2:
+		puts("Memoria insuficiente");
+		break;
 	}
-	return 0;
-}
 
-int esCaracter(token){
-	return token == SUMA || token == RESTA || token == MULTIPLICACION || token == DIVISION || token == PARENTESISABRE || token == PARENTESISCIERRA || token == PUNTO || token == COMA;
+	printf("Errores sintacticos: %d \n", yynerrs);
+	printf("Errores lexicos: %d \n", yylexerrs);
+
+	return resultado;
 }
