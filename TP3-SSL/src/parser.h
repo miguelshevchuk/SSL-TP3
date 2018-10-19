@@ -55,7 +55,8 @@ extern int yydebug;
     ESCRIBIR = 265,
     CONSTANTE = 266,
     IDENTIFICADOR = 267,
-    ASIGNACION = 268
+    ASIGNACION = 268,
+    NEG = 269
   };
 #endif
 
@@ -78,6 +79,6 @@ void mostrarError(char *mensaje, char *valor);
 extern int yylexerrs;
 extern int yynerrs;
 
-#line 82 "parser.h" /* yacc.c:1919  */
+#line 83 "parser.h" /* yacc.c:1919  */
 
 #endif /* !YY_YY_PARSER_H_INCLUDED  */

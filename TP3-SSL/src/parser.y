@@ -15,6 +15,10 @@ extern int yynerrs;
 %define api.value.type {char *}
 %define parse.error verbose
 
+%left  '-'  '+'
+%left  '*'  '/'
+%precedence  NEG
+
 %%
 programa: PROGRAMA variables codigo  FIN { if (yynerrs || yylexerrs) YYABORT;};
 
@@ -39,20 +43,18 @@ listaIdentificadores: ',' IDENTIFICADOR listaIdentificadores | %empty;
 
 listaExpresiones: ',' expresion listaExpresiones | %empty;
 
-expresion: termino;
+expresion: 
+	factor |
+	expresion  '+'  factor {printf("suma \n");} | 
+	expresion '-' factor {printf("resta \n");} |
+  	factor '*' factor {printf("multiplicacion \n");} | 
+  	factor '/' factor {printf("division \n");};
 
-expresion: expresion  '+'  termino {printf("suma \n");} | 
-	expresion '-' termino {printf("resta \n");};
-	
-termino: factor ;
-
-termino: termino '*' factor {printf("multiplicacion \n");} | 
-	termino '/' factor {printf("division \n");};
-	
-factor: CONSTANTE | IDENTIFICADOR;
-
-factor: '('expresion')' {printf("parentesis \n");} | 
-	'-' expresion {printf("inversion \n");};
+factor: 
+	CONSTANTE | 
+	IDENTIFICADOR |
+	'('expresion')' {printf("parentesis \n");} | 
+	'-' expresion %prec NEG {printf("inversion \n");};
 %%
 
 int yylexerrs = 0;
