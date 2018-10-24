@@ -9,6 +9,8 @@
 %option  outfile="scanner.c"
 %option  header-file="scanner.h"
 %option yylineno
+%option  noinput    
+%option  nounput
 
 
 digito				[[:digit:]]

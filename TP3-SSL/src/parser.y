@@ -44,17 +44,16 @@ listaIdentificadores: ',' IDENTIFICADOR listaIdentificadores | %empty;
 listaExpresiones: ',' expresion listaExpresiones | %empty;
 
 expresion: 
-	factor |
-	expresion  '+'  factor {printf("suma \n");} | 
-	expresion '-' factor {printf("resta \n");} |
-  	factor '*' factor {printf("multiplicacion \n");} | 
-  	factor '/' factor {printf("division \n");};
-
-factor: 
-	CONSTANTE | 
+	expresion  '+'  expresion {printf("suma \n");} | 
+	expresion '-' expresion {printf("resta \n");} |
+  	expresion '*' expresion {printf("multiplicacion \n");} | 
+  	expresion '/' expresion {printf("division \n");}|
+  	CONSTANTE | 
 	IDENTIFICADOR |
 	'('expresion')' {printf("parentesis \n");} | 
 	'-' expresion %prec NEG {printf("inversion \n");};
+
+
 %%
 
 int yylexerrs = 0;
