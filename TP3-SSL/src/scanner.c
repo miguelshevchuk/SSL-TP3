@@ -878,7 +878,7 @@ return ESCRIBIR;
 case 10:
 YY_RULE_SETUP
 #line 42 "scanner.l"
-return CONSTANTE;
+{yylval = strdup(yytext); return CONSTANTE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP

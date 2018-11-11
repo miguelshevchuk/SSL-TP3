@@ -12,13 +12,5 @@ void cargaBiblioteca(char *biblioteca);
 
 void stop();
 
-int yaExiste(char *identificador);
+int noExiste(char *identificador);
 
-
-//identificadores: IDENTIFICADOR listaIdentificadores;
-
-//expresiones: expresion listaExpresiones;
-
-//%token<num> CONSTANTE
-//%token<str> IDENTIFICADOR
-//%token ASIGNACION

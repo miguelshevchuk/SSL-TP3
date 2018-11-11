@@ -79,7 +79,7 @@ void asignar(char* valor, char* destino){
 	printf("%s %s, %s \n", "Store", valor, destino);
 }
 
-int yaExiste(char *identificador){
+int noExiste(char *identificador){
 	if(noEstaEnLaTabla(identificador)){
 		printf("Identificador no existente: %s  \n", identificador);
 		yysemerrs++;

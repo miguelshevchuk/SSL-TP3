@@ -56,7 +56,7 @@ expresion:
 	expresion[izq] '+' expresion[der] {$$ = generarInfijo($izq, '+', $der);} | 
 	expresion[izq] '-' expresion[der] {$$ = generarInfijo($izq, '-', $der);} |
   	CONSTANTE | 
-	IDENTIFICADOR[iden] { if(yaExiste($iden)) YYERROR;}|
+	IDENTIFICADOR[iden] { if(noExiste($iden)) YYERROR;}|
 	'('expresion[expr]')' {$$ = $expr;}| 
 	'-' expresion[der] %prec NEG {$$ = generarInfijo($der, '_', $der);};
 
