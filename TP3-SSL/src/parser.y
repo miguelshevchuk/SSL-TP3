@@ -1,19 +1,31 @@
 %code top{
 #include <stdio.h>
 #include "scanner.h"
+#include "semantic.h"
 }
 %code provides{
 void yyerror(const char *);
 void mostrarError(char *mensaje, char *valor);
 extern int yylexerrs;
 extern int yynerrs;
+
 }
 %defines "parser.h"
 %output "parser.c"
 %start  programa
-%token FDT PROGRAMA FIN VARIABLES CODIGO DEFINIR LEER ESCRIBIR CONSTANTE IDENTIFICADOR ASIGNACION
-%define api.value.type {char *}
+
 %define parse.error verbose
+
+%union {
+	int    num;
+	char   *str;
+	void		*expre;
+}
+
+%token FDT PROGRAMA FIN VARIABLES CODIGO DEFINIR LEER ESCRIBIR 
+%token<num> CONSTANTE
+%token<str> IDENTIFICADOR
+%token ASIGNACION
 
 %left  '-'  '+'
 %left  '*'  '/'
@@ -24,7 +36,7 @@ programa: PROGRAMA variables codigo  FIN { if (yynerrs || yylexerrs) YYABORT;};
 
 variables: VARIABLES declararVariable | error '.';
 
-declararVariable: DEFINIR IDENTIFICADOR '.'{printf("definir %s \n", yylval);} declararVariable | 
+declararVariable: DEFINIR IDENTIFICADOR '.'{declarar($<str>2);} declararVariable | 
 	%empty ;
 	
 codigo: CODIGO sentencia bloque ;
@@ -33,28 +45,29 @@ bloque: sentencia bloque | %empty ;
 
 sentencia: leer | asignar | escribir | error '.';
 
-leer: LEER'('IDENTIFICADOR listaIdentificadores')''.' {printf("leer \n");};
+leer: LEER'('IDENTIFICADOR {leer($<str>2);} listaIdentificadores')''.';
 
-asignar: IDENTIFICADOR ASIGNACION expresion'.' {printf("asignacion \n");};
+escribir: ESCRIBIR'('expresion[exp] {escribir($<str>exp);} listaExpresiones')''.';
 
-escribir: ESCRIBIR'('expresion listaExpresiones')''.' {printf("escribir \n");};
+asignar: IDENTIFICADOR[destino] ASIGNACION expresion[exp]'.' {asignar($<str>exp, $<str>destino);};
 
-listaIdentificadores: ',' IDENTIFICADOR listaIdentificadores | %empty;
+listaIdentificadores: ',' IDENTIFICADOR {leer($<str>1);}  listaIdentificadores | %empty;
 
-listaExpresiones: ',' expresion listaExpresiones | %empty;
+listaExpresiones: ',' expresion[exp] {escribir($<str>exp);} listaExpresiones | %empty;
 
 expresion: 
-	expresion  '+'  expresion {printf("suma \n");} | 
-	expresion '-' expresion {printf("resta \n");} |
-  	expresion '*' expresion {printf("multiplicacion \n");} | 
-  	expresion '/' expresion {printf("division \n");}|
-  	CONSTANTE | 
+	expresion[izq] '*' expresion[der] {$<str>$ = generarInfijo($<expre>izq, '*', $<expre>der);} | 
+  	expresion[izq] '/' expresion[der] {$<str>$ = generarInfijo($<expre>izq, '/', $<expre>der);}|
+	expresion[izq] '+' expresion[der] {$<str>$ = generarInfijo($<expre>izq, '+', $<expre>der);} | 
+	expresion[izq] '-' expresion[der] {$<str>$ = generarInfijo($<expre>izq, '-', $<expre>der);} |
+  	CONSTANTE[const] | 
 	IDENTIFICADOR |
-	'('expresion')' {printf("parentesis \n");} | 
-	'-' expresion %prec NEG {printf("inversion \n");};
-
+	'('expresion')' | 
+	'-' expresion[der] %prec NEG {$<str>$ = generarInfijo($<str>der, '_', $<str>der);};
 
 %%
+
+
 
 int yylexerrs = 0;
 

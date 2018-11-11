@@ -40,7 +40,7 @@ definir												return DEFINIR;
 leer													return LEER;
 escribir												return ESCRIBIR;
 {digito}+											return CONSTANTE;
-{identif}											{yylval = strdup(yytext); return IDENTIFICADOR;}
+{identif}											{yylval.str = strdup(yytext); return IDENTIFICADOR;}
 {asignacion}											return ASIGNACION;
 {suma}												return '+';
 {resta}												return '-';
