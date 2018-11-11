@@ -32,6 +32,7 @@ int main() {
 
 	printf("Errores sintacticos: %d \n", yynerrs);
 	printf("Errores lexicos: %d \n", yylexerrs);
+	printf("Errores semanticos: %d \n", yysemerrs);
 
 	return resultado;
 }

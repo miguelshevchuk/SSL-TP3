@@ -21,7 +21,8 @@ void declarar(char *s){
 
 		printf("%s %s, %s \n", "Declare", s, "Integer");
 	}else{
-
+		printf("El identificador ya existe: %s  \n", s);
+		yysemerrs++;
 	}
 
 }
@@ -78,9 +79,13 @@ void asignar(char* valor, char* destino){
 	printf("%s %s, %s \n", "Store", valor, destino);
 }
 
-void verificarExistencia(char *identificador){
+int yaExiste(char *identificador){
 	if(noEstaEnLaTabla(identificador)){
 		printf("Identificador no existente: %s  \n", identificador);
+		yysemerrs++;
+		return 1;
 	}
+
+	return 0;
 }
 

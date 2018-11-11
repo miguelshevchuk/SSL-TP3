@@ -12,7 +12,7 @@ void cargaBiblioteca(char *biblioteca);
 
 void stop();
 
-void verificarExistencia(char *identificador);
+int yaExiste(char *identificador);
 
 
 //identificadores: IDENTIFICADOR listaIdentificadores;

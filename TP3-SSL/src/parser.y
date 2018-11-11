@@ -8,6 +8,7 @@ void yyerror(const char *);
 void mostrarError(char *mensaje, char *valor);
 extern int yylexerrs;
 extern int yynerrs;
+extern int yysemerrs;
 
 }
 %defines "parser.h"
@@ -26,12 +27,12 @@ extern int yynerrs;
 %precedence  NEG
 
 %%
-programa: PROGRAMA {cargaBiblioteca("rtlib");} variables codigo  FIN {stop(); if (yynerrs || yylexerrs) YYABORT;};
+programa: PROGRAMA {cargaBiblioteca("rtlib");} variables codigo  FIN {stop(); if (yynerrs || yylexerrs || yysemerrs) YYABORT; else YYACCEPT;};
 
 variables: VARIABLES declararVariable | error '.';
 
 declararVariable: DEFINIR IDENTIFICADOR '.'{declarar($2);} declararVariable | 
-	%empty ;
+	%empty;
 	
 codigo: CODIGO sentencia bloque ;
 
@@ -55,7 +56,7 @@ expresion:
 	expresion[izq] '+' expresion[der] {$$ = generarInfijo($izq, '+', $der);} | 
 	expresion[izq] '-' expresion[der] {$$ = generarInfijo($izq, '-', $der);} |
   	CONSTANTE | 
-	IDENTIFICADOR[iden] {verificarExistencia($iden);}|
+	IDENTIFICADOR[iden] { if(yaExiste($iden)) YYERROR;}|
 	'('expresion[expr]')' {$$ = $expr;}| 
 	'-' expresion[der] %prec NEG {$$ = generarInfijo($der, '_', $der);};
 
@@ -64,11 +65,11 @@ expresion:
 
 
 int yylexerrs = 0;
+int yysemerrs = 0;
 
 /* Informa la ocurrencia de un error. */
 void yyerror(const char *s){
 	printf("línea #%d: %s\n", yylineno, s);
-	
 	return;
 }
 
