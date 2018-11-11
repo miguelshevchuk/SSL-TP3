@@ -8,8 +8,17 @@ void leer (char * in);
 
 void escribir (char * in);
 
+void cargaBiblioteca(char *biblioteca);
+
+void stop();
+
+void verificarExistencia(char *identificador);
+
 
 //identificadores: IDENTIFICADOR listaIdentificadores;
 
 //expresiones: expresion listaExpresiones;
 
+//%token<num> CONSTANTE
+//%token<str> IDENTIFICADOR
+//%token ASIGNACION

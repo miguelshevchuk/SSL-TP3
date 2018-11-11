@@ -39,8 +39,8 @@ codigo												return CODIGO;
 definir												return DEFINIR;
 leer													return LEER;
 escribir												return ESCRIBIR;
-{digito}+											return CONSTANTE;
-{identif}											{yylval.str = strdup(yytext); return IDENTIFICADOR;}
+{digito}+											{yylval = strdup(yytext); return CONSTANTE;}
+{identif}											{yylval = strdup(yytext); return IDENTIFICADOR;}
 {asignacion}											return ASIGNACION;
 {suma}												return '+';
 {resta}												return '-';

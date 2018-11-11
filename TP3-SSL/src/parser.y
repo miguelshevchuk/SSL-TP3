@@ -16,27 +16,21 @@ extern int yynerrs;
 
 %define parse.error verbose
 
-%union {
-	int    num;
-	char   *str;
-	void		*expre;
-}
 
-%token FDT PROGRAMA FIN VARIABLES CODIGO DEFINIR LEER ESCRIBIR 
-%token<num> CONSTANTE
-%token<str> IDENTIFICADOR
-%token ASIGNACION
+ %define api.value.type {char *}
+%token FDT PROGRAMA FIN VARIABLES CODIGO DEFINIR LEER ESCRIBIR CONSTANTE IDENTIFICADOR ASIGNACION
+
 
 %left  '-'  '+'
 %left  '*'  '/'
 %precedence  NEG
 
 %%
-programa: PROGRAMA variables codigo  FIN { if (yynerrs || yylexerrs) YYABORT;};
+programa: PROGRAMA {cargaBiblioteca("rtlib");} variables codigo  FIN {stop(); if (yynerrs || yylexerrs) YYABORT;};
 
 variables: VARIABLES declararVariable | error '.';
 
-declararVariable: DEFINIR IDENTIFICADOR '.'{declarar($<str>2);} declararVariable | 
+declararVariable: DEFINIR IDENTIFICADOR '.'{declarar($2);} declararVariable | 
 	%empty ;
 	
 codigo: CODIGO sentencia bloque ;
@@ -45,25 +39,25 @@ bloque: sentencia bloque | %empty ;
 
 sentencia: leer | asignar | escribir | error '.';
 
-leer: LEER'('IDENTIFICADOR {leer($<str>2);} listaIdentificadores')''.';
+leer: LEER'('IDENTIFICADOR {leer($2);} listaIdentificadores')''.';
 
-escribir: ESCRIBIR'('expresion[exp] {escribir($<str>exp);} listaExpresiones')''.';
+escribir: ESCRIBIR'('expresion[exp] {escribir($exp);} listaExpresiones')''.';
 
-asignar: IDENTIFICADOR[destino] ASIGNACION expresion[exp]'.' {asignar($<str>exp, $<str>destino);};
+asignar: IDENTIFICADOR[destino] ASIGNACION expresion[exp]'.' {asignar($exp, $destino);};
 
-listaIdentificadores: ',' IDENTIFICADOR {leer($<str>1);}  listaIdentificadores | %empty;
+listaIdentificadores: ',' IDENTIFICADOR {leer($1);}  listaIdentificadores | %empty;
 
-listaExpresiones: ',' expresion[exp] {escribir($<str>exp);} listaExpresiones | %empty;
+listaExpresiones: ',' expresion[exp] {escribir($exp);} listaExpresiones | %empty;
 
 expresion: 
-	expresion[izq] '*' expresion[der] {$<str>$ = generarInfijo($<expre>izq, '*', $<expre>der);} | 
-  	expresion[izq] '/' expresion[der] {$<str>$ = generarInfijo($<expre>izq, '/', $<expre>der);}|
-	expresion[izq] '+' expresion[der] {$<str>$ = generarInfijo($<expre>izq, '+', $<expre>der);} | 
-	expresion[izq] '-' expresion[der] {$<str>$ = generarInfijo($<expre>izq, '-', $<expre>der);} |
-  	CONSTANTE[const] | 
-	IDENTIFICADOR |
-	'('expresion')' | 
-	'-' expresion[der] %prec NEG {$<str>$ = generarInfijo($<str>der, '_', $<str>der);};
+	expresion[izq] '*' expresion[der] {$$ = generarInfijo($izq, '*', $der);} | 
+  	expresion[izq] '/' expresion[der] {$$ = generarInfijo($izq, '/', $der);}|
+	expresion[izq] '+' expresion[der] {$$ = generarInfijo($izq, '+', $der);} | 
+	expresion[izq] '-' expresion[der] {$$ = generarInfijo($izq, '-', $der);} |
+  	CONSTANTE | 
+	IDENTIFICADOR[iden] {verificarExistencia($iden);}|
+	'('expresion[expr]')' {$$ = $expr;}| 
+	'-' expresion[der] %prec NEG {$$ = generarInfijo($der, '_', $der);};
 
 %%
 

@@ -2,8 +2,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include "symbol.h"
+#include "parser.h"
 
 int nroTemporal = 1;
+
+void cargaBiblioteca(char *biblioteca){
+	printf("%s %s, \n", "Load", biblioteca);
+}
+
+void stop(){
+	printf("Stop, \n");
+}
 
 void declarar(char *s){
 
@@ -12,7 +21,7 @@ void declarar(char *s){
 
 		printf("%s %s, %s \n", "Declare", s, "Integer");
 	}else{
-		printf("Dale, man \n");
+
 	}
 
 }
@@ -58,7 +67,6 @@ char* generarInfijo(void *operando1, char operador, void *operando2){
 			printf("%s %s, ,%s \n", "INV", operando1, temporal);
 			break;
 
-
 	}
 
 	return temporal;
@@ -68,5 +76,11 @@ char* generarInfijo(void *operando1, char operador, void *operando2){
 void asignar(char* valor, char* destino){
 
 	printf("%s %s, %s \n", "Store", valor, destino);
+}
+
+void verificarExistencia(char *identificador){
+	if(noEstaEnLaTabla(identificador)){
+		printf("Identificador no existente: %s  \n", identificador);
+	}
 }
 
