@@ -31,7 +31,7 @@ programa: PROGRAMA {cargaBiblioteca("rtlib");} variables codigo  FIN {stop(); if
 
 variables: VARIABLES declararVariable | error '.';
 
-declararVariable: DEFINIR IDENTIFICADOR '.'{declarar($2);} declararVariable | 
+declararVariable: DEFINIR IDENTIFICADOR '.'{if(!declarar($2)) YYERROR;} declararVariable | 
 	%empty;
 	
 codigo: CODIGO sentencia bloque ;
@@ -44,7 +44,7 @@ leer: LEER'('IDENTIFICADOR {leer($2);} listaIdentificadores')''.';
 
 escribir: ESCRIBIR'('expresion[exp] {escribir($exp);} listaExpresiones')''.';
 
-asignar: IDENTIFICADOR[destino] ASIGNACION expresion[exp]'.' {asignar($exp, $destino);};
+asignar: IDENTIFICADOR[destino] { if(noExiste($destino)) YYERROR;} ASIGNACION expresion[exp]'.' {asignar($exp, $destino);};
 
 listaIdentificadores: ',' IDENTIFICADOR {leer($1);}  listaIdentificadores | %empty;
 

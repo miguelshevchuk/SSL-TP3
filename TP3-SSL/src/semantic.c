@@ -14,16 +14,19 @@ void stop(){
 	printf("Stop, \n");
 }
 
-void declarar(char *s){
+int declarar(char *s){
 
 	if(noEstaEnLaTabla(s)){
 		agregarALaTabla(s);
 
 		printf("%s %s, %s \n", "Declare", s, "Integer");
 	}else{
-		printf("El identificador ya existe: %s  \n", s);
+		mostrarError("Error Semantico: El identificador ya fue declarado: ", s);
 		yysemerrs++;
+		return 0;
 	}
+
+	return 1;
 
 }
 
@@ -81,7 +84,7 @@ void asignar(char* valor, char* destino){
 
 int noExiste(char *identificador){
 	if(noEstaEnLaTabla(identificador)){
-		printf("Identificador no existente: %s  \n", identificador);
+		mostrarError("Error Semantico: Identificador Inexistente: ", identificador);
 		yysemerrs++;
 		return 1;
 	}

@@ -1,4 +1,4 @@
-void declarar(char *s);
+int declarar(char *s);
 
 char* generarInfijo(void *operando1, char operador, void *operando2);
 
