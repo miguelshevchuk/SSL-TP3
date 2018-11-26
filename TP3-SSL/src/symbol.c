@@ -20,12 +20,16 @@ int noEstaEnLaTabla(char *s){
 }
 
 void agregarALaTabla(char *nuevoID){
+//queda definir el limite de la tabla y calcular el tamanio de la tabla para comparar
+int tamanioTabla = 0, limiteTabla = 0;
 
-	simbolos[nroSimbolo] = nuevoID;
-	nroSimbolo++;
-
+	if(tamanioTabla < limiteTabla){
+		simbolos[nroSimbolo] = nuevoID;
+		nroSimbolo++;
+	}else{
+		return 0; //para que salga del programa, pero tendriamos que indicarle un tipo de error 
+	}
 }
-
 
 
 

@@ -11,9 +11,6 @@
 #include "scanner.h"
 #include "parser.h"
 
-char *token_names[] = {"Fin de Archivo","Programa", "Fin", "Variables", "Codigo", "Definir", "Leer", "Escribir", "Constante", "Identificador", "Asignacion", "Suma", "Resta", "Multiplicacion", "Division", "Parentesis_abre", "Parentesis_cierra", "Punto", "Coma"};
-
-
 int main() {
 	int resultado = yyparse();
 	switch( resultado ){

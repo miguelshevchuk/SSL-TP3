@@ -49,7 +49,7 @@ void escribir (char * in) {
 }
 
 
-char* generarInfijo(void *operando1, char operador, void *operando2){
+char* generarInfijo(char* operando1, char operador, char* operando2){
 
 	char *temporal = declararTemporal();
 
