@@ -9,6 +9,7 @@ void mostrarError(char *mensaje, char *valor);
 extern int yylexerrs;
 extern int yynerrs;
 extern int yysemerrs;
+extern int errMemoria;
 
 }
 %defines "parser.h"
@@ -27,7 +28,7 @@ extern int yysemerrs;
 %precedence  NEG
 
 %%
-programa: PROGRAMA {cargaBiblioteca("rtlib");} variables codigo  FIN {stop(); if (yynerrs || yylexerrs || yysemerrs) YYABORT; else YYACCEPT;};
+programa: PROGRAMA {cargaBiblioteca("rtlib");} variables codigo  FIN {stop(); if(errMemoria) return 2; else if (yynerrs || yylexerrs || yysemerrs) YYABORT; else YYACCEPT;};
 
 variables: VARIABLES declararVariable | error '.';
 
@@ -40,13 +41,13 @@ bloque: sentencia bloque | %empty ;
 
 sentencia: leer | asignar | escribir | error '.';
 
-leer: LEER'('IDENTIFICADOR {leer($2);} listaIdentificadores')''.';
+leer: LEER'(' listaIdentificadores IDENTIFICADOR[id] {if(!leer($id)) YYERROR;} ')''.';
 
 escribir: ESCRIBIR'('expresion[exp] {escribir($exp);} listaExpresiones')''.';
 
 asignar: IDENTIFICADOR[destino] { if(noExiste($destino)) YYERROR;} ASIGNACION expresion[exp]'.' {asignar($exp, $destino);};
 
-listaIdentificadores: ',' IDENTIFICADOR {leer($1);}  listaIdentificadores | %empty;
+listaIdentificadores:  listaIdentificadores IDENTIFICADOR[ide] ',' {if(!leer($ide)) YYERROR;}  | %empty;
 
 listaExpresiones: ',' expresion[exp] {escribir($exp);} listaExpresiones | %empty;
 
@@ -66,6 +67,7 @@ expresion:
 
 int yylexerrs = 0;
 int yysemerrs = 0;
+int errMemoria = 0;
 
 /* Informa la ocurrencia de un error. */
 void yyerror(const char *s){

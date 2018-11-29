@@ -17,18 +17,33 @@ void stop(){
 int declarar(char *s){
 
 	if(noEstaEnLaTabla(s)){
-		agregarALaTabla(s);
-
-		printf("%s %s, %s \n", "Declare", s, "Integer");
+		if(agregarALaTabla(s)){
+			printf("%s %s, %s \n", "Declare", s, "Integer");
+			return 1;
+		}else{
+			mostrarError("No se puede declarar la variable - Memoria insuficiente: ", s);
+			errMemoria = 1;
+		}
 	}else{
 		mostrarError("Error Semantico: El identificador ya fue declarado: ", s);
 		yysemerrs++;
-		return 0;
 	}
 
-	return 1;
+	return 0;
+
 
 }
+
+int noExiste(char *identificador){
+	if(noEstaEnLaTabla(identificador)){
+		mostrarError("Error Semantico: Identificador Inexistente: ", identificador);
+		yysemerrs++;
+		return 1;
+	}
+
+	return 0;
+}
+
 
 char* declararTemporal(){
 	char *temporal = malloc(sizeof(char *));
@@ -40,8 +55,12 @@ char* declararTemporal(){
 }
 
 
-void leer (char * in) {
+int leer (char * in) {
+	if(noExiste(in)){
+		return 0;
+	}
 	printf("%s %s, %s \n", "Read", in, "Integer");
+	return 1;
 }
 
 void escribir (char * in) {
@@ -82,13 +101,4 @@ void asignar(char* valor, char* destino){
 	printf("%s %s, %s \n", "Store", valor, destino);
 }
 
-int noExiste(char *identificador){
-	if(noEstaEnLaTabla(identificador)){
-		mostrarError("Error Semantico: Identificador Inexistente: ", identificador);
-		yysemerrs++;
-		return 1;
-	}
-
-	return 0;
-}
 

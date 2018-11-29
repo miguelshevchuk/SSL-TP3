@@ -2,4 +2,4 @@
 
 int noEstaEnLaTabla(char *s);
 
-void agregarALaTabla(char *nuevoID);
+int agregarALaTabla(char *nuevoID);
